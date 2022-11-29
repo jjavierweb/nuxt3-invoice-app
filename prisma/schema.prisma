@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(255)
+  description String?   @ignore @db.VarChar(255)
+  street      String    @db.VarChar(255)
+  city        String    @db.VarChar(255)
+  province    String    @db.VarChar(255)
+  zipCode     String    @db.VarChar(10)
+  country     String    @db.VarChar(20)
+  user        String    @db.Uuid
+  createdAt   DateTime  @default(now())
+  clients     Client[]
+  Invoice     Invoice[]
+}
+
+model Client {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(255)
+  email     String    @unique @db.VarChar(255)
+  street    String    @db.VarChar(255)
+  city      String    @db.VarChar(255)
+  province  String    @db.VarChar(255)
+  zipCode   String    @db.VarChar(10)
+  country   String    @db.VarChar(20)
+  company   Company   @relation(fields: [companyId], references: [id])
+  companyId Int
+  invoices  Invoice[]
+  createdAt DateTime  @default(now())
+}
+
+model Invoice {
+  id          Int            @id @default(autoincrement())
+  number      String         @unique
+  date        String
+  dateUnix    BigInt
+  terms       Int
+  dueDate     String
+  dueDateUnix BigInt
+  pendindg    Boolean
+  draft       Boolean
+  paid        Boolean
+  client      Client         @relation(fields: [clientId], references: [id])
+  clientId    Int
+  company     Company        @relation(fields: [companyId], references: [id])
+  companyId   Int
+  items       InvoiceItems[]
+  createdAt   DateTime       @default(now())
+}
+
+model InvoiceItems {
+  id        Int      @id @default(autoincrement())
+  name      String
+  price     Float
+  invoice   Invoice  @relation(fields: [invoiceId], references: [id])
+  invoiceId Int
+  createdAt DateTime @default(now())
+}
