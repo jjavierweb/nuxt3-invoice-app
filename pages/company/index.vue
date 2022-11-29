@@ -2,7 +2,7 @@
   <Title>My Company</Title>
   <ErrorMessage v-if="error" :errorMsg="error.message" />
   <div>Company Data</div>
-  <Loading v-if="isPending" />
+  <UtilsLoading v-if="isPending" />
   <div v-if="!isPending">{{ companies }}</div>
 </template>
 
