@@ -1,4 +1,5 @@
 <template>
+  <Title>My Company</Title>
   <div>Company Data</div>
   {{ companies }}
 </template>
